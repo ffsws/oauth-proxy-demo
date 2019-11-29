@@ -1,0 +1,33 @@
+apiVersion: authorization.openshift.io/v1
+kind: ClusterRole
+metadata:
+  name: vshn-oauth-proxy-demo
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  attributeRestrictions: null
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  attributeRestrictions: null
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  creationTimestamp: null
+  name: vshn-oauth-proxy-demo
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: vshn-oauth-proxy-demo
+subjects:
+- kind: ServiceAccount
+  name: vshn-oauth-proxy-demo
+  namespace: vshn-oauth-proxy-demo

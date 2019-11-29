@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: DeploymentConfig
+metadata:
+  name: vshn-oauth-proxy-demo
+  labels:
+    app: vshn-oauth-proxy-demo
+# tag::service_name[]
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: vshn-oauth-proxy-demo
+    spec:
+      serviceAccountName: vshn-oauth-proxy-demo # <1>
+# end::service_name[]
+# tag::volume_1[]
+      volumes:
+        - name: vshn-oauth-proxy-demo-tls
+          secret:
+            defaultMode: 420
+            secretName: vshn-oauth-proxy-demo-tls
+# end::volume_1[]
+      containers:
+        - name: vshn-oauth-proxy-demo-main
+          image: vshn/nginx:1.0
+          imagePullPolicy: Always
+          ports:
+          - name: http
+            containerPort: 8080
+            protocol: TCP
+        - name: vshn-oauth-proxy-demo-oauth-proxy
+          image: 'registry.redhat.io/openshift3/oauth-proxy:v3.11.153'
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 9094
+            name: web
+            protocol: TCP
+# tag::args[]
+          args:
+            - '-provider=openshift'
+            - '-https-address=:9094'  # <1>
+            - '-http-address='
+            - '-email-domain=*'
+            - '-upstream=http://localhost:8080' # <2>
+            - '-openshift-sar={"resource": "namespaces", "verb": "get"}'
+            - '-openshift-delegate-urls={"/": {"resource": "namespaces", "verb": "get"}}'
+            - '-tls-cert=/etc/tls/private/tls.crt'
+            - '-tls-key=/etc/tls/private/tls.key'
+            - '-client-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token'
+            - '-cookie-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token'
+            - '-openshift-service-account=vshn-oauth-proxy-demo'  # <3>
+            - '-openshift-ca=/etc/pki/tls/cert.pem'
+            - '-openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
+# end::args[]
+# tag::volume_2[]
+          volumeMounts:
+            - mountPath: /etc/tls/private
+              name: vshn-oauth-proxy-demo-tls
+# end::volume_2[]

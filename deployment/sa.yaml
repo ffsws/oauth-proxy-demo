@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vshn-oauth-proxy-demo
+  namespace: vshn-oauth-proxy-demo
+  annotations:
+    serviceaccounts.openshift.io/oauth-redirectreference.vshn-oauth-proxy-demo: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"vshn-oauth-proxy-demo"}}' # <1>

@@ -1,0 +1,20 @@
+apiVersion: route.openshift.io/v1
+metadata:
+  name: vshn-oauth-proxy-demo
+  labels:
+    app: vshn-oauth-proxy-demo
+  annotations:
+    kubernetes.io/tls-acme: "true"
+# tag::reencrypt[]
+kind: Route
+spec:
+  host: vshn-oauth-proxy-demo.appuioapp.ch
+  port:
+    targetPort: web   # <1>
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: reencrypt # <2>
+  to:
+    kind: Service
+    name: vshn-oauth-proxy-demo  # <3>
+# end::reencrypt[]
