@@ -8,7 +8,6 @@ metadata:
 # tag::reencrypt[]
 kind: Route
 spec:
-  host: vshn-oauth-proxy-demo.appuioapp.ch
   port:
     targetPort: web   # <1>
   tls:

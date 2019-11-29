@@ -36,7 +36,7 @@ master:deploy:
     name: production
     url: https://vshn-oauth-proxy-demo.appuioapp.ch
   script:
-    - oc -n ${PROJECT_NAME} apply -f deployment/
+    - oc -n ${PROJECT_NAME} apply -k deployment/
     - oc -n ${PROJECT_NAME} rollout latest dc/vshn-oauth-proxy-demo
   only:
     - master

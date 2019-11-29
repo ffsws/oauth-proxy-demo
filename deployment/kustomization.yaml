@@ -1,0 +1,7 @@
+# This only used in the context of the GitLab CI runner, so that the
+# service account does not need to re-generate cluster roles, cluster role bindings,
+# and service accounts (which it can't)
+resources:
+    - deployment.yaml
+    - route.yaml
+    - service.yaml
