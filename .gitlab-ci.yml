@@ -16,7 +16,7 @@ stages:
   script:
     - docker login -u gitlab-ci -p ${APPUIO_REGISTRY_TOKEN} registry.appuio.ch
     - docker pull $MAIN_IMAGE || true
-    - docker build --cache-from $MAIN_IMAGE -t $MAIN_IMAGE -f deployment/main/Dockerfile .
+    - docker build --cache-from $MAIN_IMAGE -t $MAIN_IMAGE -f deployment/Dockerfile .
     - if [ ${CI_COMMIT_REF_NAME} == "master" ]; then docker push $MAIN_IMAGE; fi
 
 develop:build:
