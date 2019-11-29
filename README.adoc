@@ -1,6 +1,6 @@
 = Demo Project for the `oauth-proxy` Sidecar Container
 
-This project demonstrates how to use the https://github.com/openshift/oauth-proxy[`oauth-proxy`] sidecar container in an OpenShift cluster.
+This project demonstrates how to use the https://github.com/openshift/oauth-proxy[`oauth-proxy`] sidecar container in an OpenShift cluster. It can be seen running at https://vshn-oauth-proxy-demo.appuioapp.ch/[APPUiO].
 
 NOTE: This information comes from the effort required to deploy the https://vshn-oc-docs.appuioapp.ch/[OpenShift Documentation] website (https://git.vshn.net/education/openshift-documentation/[source code])
 
