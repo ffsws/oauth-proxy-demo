@@ -23,7 +23,7 @@ spec:
 # end::volume_1[]
       containers:
         - name: vshn-oauth-proxy-demo-main
-          image: vshn/nginx:1.0
+          image: docker-registry.default.svc:5000/vshn-oauth-proxy-demo/vshn-oauth-proxy-demo-main:latest
           imagePullPolicy: Always
           ports:
           - name: http
