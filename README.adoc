@@ -1,6 +1,21 @@
+:author: VSHN AG
+:revdate: {docdate}
+:revnumber: 1.0
+:email:  documentation@vshn.ch
+:copyright: CC-BY-SA 3.0
+:doctitle: Demo Project for the `oauth-proxy` Sidecar Container
+:producer: VSHN AG
+:creator: VSHN AG
+:description: A guide to use the `oauth-proxy` container in OpenShift.
+:keywords: VSHN, OpenShift, OAuth
+:lang: en
+
 = Demo Project for the `oauth-proxy` Sidecar Container
 
-This project demonstrates how to use the https://github.com/openshift/oauth-proxy[`oauth-proxy`] sidecar container in an OpenShift cluster. It can be seen running at https://vshn-oauth-proxy-demo.appuioapp.ch/[APPUiO].
+This project demonstrates how to use the https://github.com/openshift/oauth-proxy[`oauth-proxy`] sidecar container in an OpenShift cluster.
+
+* Running instance at https://vshn-oauth-proxy-demo.appuioapp.ch/[APPUiO].
+* Source code at https://git.vshn.net/education/vshn-oauth-proxy-demo[GitLab].
 
 NOTE: This information comes from the effort required to deploy the https://vshn-oc-docs.appuioapp.ch/[OpenShift Documentation] website (https://git.vshn.net/education/openshift-documentation/[source code])
 
@@ -9,19 +24,21 @@ NOTE: This information comes from the effort required to deploy the https://vshn
 In order to deploy the `oauth-proxy` correctly, pay attention to the following points:
 
 
-. Create a dedicated `ServiceAccount`:
-+
+=== ServiceAccount
+
+Create a Dedicated `ServiceAccount` for the purposes of this container:
+
 [source,yaml]
 --
 include::deployment/sa.yaml[]
 --
 <1> Make sure the `reference/name` value in the JSON referenced by `metadata:annotations:serviceaccounts…` points to a valid route, defined in the deployment.
 
+=== Deployment
 
+Reference the newly created service account in the following locations:
 
-
-. Reference the newly created service account in the following locations:
-.. In the `Deployment`, at `spec:template:spec:serviceAccountName` key
+. In the `Deployment`, at `spec:template:spec:serviceAccountName` key
 +
 [source,yaml]
 --
@@ -31,8 +48,7 @@ include::deployment/deployment.yaml[tag=service_name]
 
 
 
-
-.. Also in the `Deployment`, in the arguments of the `oauth-proxy` itself:
+. Also in the `Deployment`, in the arguments of the `oauth-proxy` itself:
 +
 [source,yaml]
 --
@@ -42,11 +58,8 @@ include::deployment/deployment.yaml[tag=args,indent=none]
 <2> The port of the container protected by the `oauth-proxy` container goes in the `-upstream` argument.
 <3> Specify the service account name under the `-openshift-service-account` argument.
 
+=== Route
 
-
-
-. Specify the `Route` as `reencrypt`:
-+
 [source,yaml]
 --
 include::deployment/route.yaml[tag=reencrypt,indent=none]
@@ -56,19 +69,22 @@ include::deployment/route.yaml[tag=reencrypt,indent=none]
 <3> And point to the corresponding `Service` as required.
 
 
-. Create the required `ClusterRole` and `ClusterRoleBinding` objects, including all required rules:
-+
+=== ClusterRole and ClusterRoleBinding
+
+Create the required `ClusterRole` and `ClusterRoleBinding` objects, including all required rules:
+
+CAUTION: You *must* use `ClusterRole` and `ClusterRoleBinding` *instead of* `Role` and `RoleBinding` for this system to work.
+
 [source,yaml]
 --
 include::deployment/role.yaml[]
 --
-+
-CAUTION: You *must* use `ClusterRole` and `ClusterRoleBinding` *instead of* `Role` and `RoleBinding` for this system to work.
 
+=== Volumes
 
+Specify the volumes and secrets containing the TLS certicate:
 
-. Specify the volumes and secrets containing the TLS certicate:
-.. In the `Deployment`:
+. In the `Deployment`:
 +
 [source,yaml]
 --
@@ -80,8 +96,7 @@ include::deployment/deployment.yaml[tags=volume_1,indent=no]
 include::deployment/deployment.yaml[tags=volume_2,indent=no]
 --
 
-
-.. In the `Service`:
+. In the `Service`:
 +
 [source,yaml]
 --

@@ -1,0 +1,42 @@
+variables:
+  PROJECT_NAME: vshn-oauth-proxy-demo
+  MAIN_IMAGE: registry.appuio.ch/vshn-oauth-proxy-demo/vshn-oauth-proxy-demo-main:latest
+
+stages:
+  - build
+  - deploy
+
+.build-docker:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  tags:
+    - dockerbuild
+  script:
+    - docker login -u gitlab-ci -p ${APPUIO_REGISTRY_TOKEN} registry.appuio.ch
+    - docker pull $MAIN_IMAGE || true
+    - docker build --cache-from $MAIN_IMAGE -t $MAIN_IMAGE -f deployment/main/Dockerfile .
+    - if [ ${CI_COMMIT_REF_NAME} == "master" ]; then docker push $MAIN_IMAGE; fi
+
+develop:build:
+  extends: .build-docker
+  except:
+    - master
+
+master:build:
+  extends: .build-docker
+  only:
+    - master
+
+master:deploy:
+  stage: deploy
+  image: docker.io/appuio/oc:v3.9
+  environment:
+    name: production
+    url: https://vshn-oauth-proxy-demo.appuioapp.ch
+  script:
+    - oc -n ${PROJECT_NAME} apply -f deployment/
+    - oc -n ${PROJECT_NAME} rollout latest dc/vshn-oauth-proxy-demo
+  only:
+    - master
