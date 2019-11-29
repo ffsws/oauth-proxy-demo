@@ -31,7 +31,7 @@ master:build:
 
 master:deploy:
   stage: deploy
-  image: docker.io/appuio/oc:v3.9
+  image: docker.io/appuio/oc:v3.11
   environment:
     name: production
     url: https://vshn-oauth-proxy-demo.appuioapp.ch

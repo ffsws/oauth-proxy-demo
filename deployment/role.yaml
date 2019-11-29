@@ -5,14 +5,12 @@ metadata:
 rules:
 - apiGroups:
   - authentication.k8s.io
-  attributeRestrictions: null
   resources:
   - tokenreviews
   verbs:
   - create
 - apiGroups:
   - authorization.k8s.io
-  attributeRestrictions: null
   resources:
   - subjectaccessreviews
   verbs:
@@ -21,7 +19,6 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  creationTimestamp: null
   name: vshn-oauth-proxy-demo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
