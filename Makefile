@@ -5,7 +5,7 @@ docker_cmd  ?= docker
 docker_opts ?= --rm --tty --user "$$(id -u)"
 
 asciidoctor_cmd  ?= $(docker_cmd) run $(docker_opts) --volume "$${PWD}":/documents/ asciidoctor/docker-asciidoctor asciidoctor
-asciidoctor_opts ?= --destination-dir=$(web_dir) --attribute stem=latexmath --attribute hide-uri-scheme --attribute source-highlighter=rouge --attribute icons=font --attribute icon-set=fi --attribute numbered --attribute toc --attribute toclevels=2
+asciidoctor_opts ?= --destination-dir=$(web_dir) --attribute stem=latexmath --attribute hide-uri-scheme --attribute source-highlighter=rouge --attribute icons=font --attribute icon-set=fi --attribute numbered --attribute toc=left --attribute toclevels=2
 
 UNAME := $(shell uname)
 ifeq ($(UNAME), Linux)
